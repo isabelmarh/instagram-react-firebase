@@ -59,7 +59,8 @@ export default function Login() {
                         />
                         <button
                             disabled={isInvalid}
-                            type="submit" className={`bg-blue-500 text-white w-full rounded h-8 font bold ${isInvalid && 'cursor-not-allowed opacity-50'}`}>Log In</button>
+                            type="submit" className={`bg-blue-500 text-white w-full rounded h-8 font bold ${isInvalid && 'cursor-not-allowed opacity-50'}`}>Log In
+                        </button>
                     </form>
                 </div>
                 <div className="flex justify-center items-center flex-col w-full bg-white p-4 border">
@@ -72,6 +73,5 @@ export default function Login() {
                 </div>
             </div>
         </div>
-
     );
 }
