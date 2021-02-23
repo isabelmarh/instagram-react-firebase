@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import * as ROUTES from './../constants/routes';
 import FirebaseContext from '../context/firebase';
+import { doesUsernameExists } from '../services/firebase';
 
 export default function SignUp() {
     const { firebase } = useContext(FirebaseContext);
@@ -15,28 +16,36 @@ export default function SignUp() {
 
     const handleSignUp = async (event) => {
         event.preventDefault();
-        try {
-            const createUserResult = await firebase.auth().createUserWithEmailAndPassword(emailAddress, password);
 
-            await createUserResult.user.updateProfile({
-                displayName: username
-            });
+        const usernameExists = await doesUsernameExists(username);
+        if (!usernameExists.length) {
+            try {
+                const createUserResult = await firebase.auth().createUserWithEmailAndPassword(emailAddress, password);
 
-            await firebase.firestore().collection('users').add({
-                userId: createUserResult.user.uid,
-                username: username.toLowerCase(),
-                fullName,
-                emailAddress: emailAddress.toLowerCase,
-                following: [],
-                followers: [],
-                dateCreated: Date.now()
-            });
+                await createUserResult.user.updateProfile({
+                    displayName: username
+                });
 
-        } catch (error) {
+                await firebase.firestore().collection('users').add({
+                    userId: createUserResult.user.uid,
+                    username: username.toLowerCase(),
+                    fullName,
+                    emailAddress: emailAddress.toLowerCase,
+                    following: [],
+                    followers: [],
+                    dateCreated: Date.now()
+                });
+
+            } catch (error) {
+                setFullName('');
+                setError(error.message);
+            }
+        } else {
             setFullName('');
+            setUsername('');
             setEmailAddress('');
             setPassword('');
-            setError(error.message);
+            setError('That username already exists, please try again');
         }
     };
 
@@ -76,7 +85,7 @@ export default function SignUp() {
                             className="text-sm-gray w-full mr-3 py-5 px-4 h-2 border bg-gray-background rounded mb-2" />
                         <input
                             aria-label="Enter your password"
-                            type="text"
+                            type="password"
                             placeholder="Password"
                             value={password}
                             onChange={({ target }) => setPassword(target.value)}
