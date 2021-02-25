@@ -1,4 +1,4 @@
-import { firebase } from '../lib/firebase';
+import { firebase, FieldValue } from '../lib/firebase';
 
 export async function doesUsernameExist(username) {
     const result = await firebase
@@ -25,11 +25,11 @@ export async function getUserByUserId(userId) {
     return user;
 }
 
-export async function getUserFollowedPhotos(userId, followingUserIds) {
+export async function getUserFollowedPhotos(userId, followingUserId) {
     const result = await firebase
         .firestore()
         .collection('photos')
-        .where('userId', 'in', followingUserIds)
+        .where('userId', 'in', followingUserId)
         .get();
 
     const userFollowedPhotos = result.docs.map((item) => ({

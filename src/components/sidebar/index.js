@@ -1,11 +1,15 @@
 import React from 'react';
-import useUser from '../../hooks/use-user';
+// import useUser from '../../hooks/use-user';
 
 export default function Sidebar() {
-    const { user: { userId, username, fullName } } = useUser();
+    // user.fullName -> fullName, username, userId (destructure the values)
+    // const {
+    //     user: { fullName, username, userId }
+    // } = useUser();
+
     return (
-        <div>
-            <p>Sidebar</p>
+        <div className="p-4">
+            hello
         </div>
     );
 }
